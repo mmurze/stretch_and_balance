@@ -20,6 +20,9 @@
           <li v-if="currentUser" class="nav-item" @click="logout">
             <router-link class="nav-link" to="" href=""> Выйти </router-link>
           </li>
+          <li v-if="showAdminBoard" class="nav-item" @click="schedule">
+            <router-link class="nav-link" to="" href=""> Изменить расписание </router-link>
+          </li>
         </ul>
       </div>
     </div>
@@ -61,7 +64,6 @@
 </template>
 
 <script>
-import UserService from "../services/user";
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: 'Profile',
@@ -76,35 +78,28 @@ export default {
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
-    }
+    },
+    showAdminBoard() {
+      console.log(this.currentUser);
+      if (this.currentUser && this.currentUser['roles']) {
+        return this.currentUser['roles'].includes('ROLE_ADMIN');
+      }
+      return false;
+    },
   },
   mounted() {
+    
     if (!this.currentUser) {
       this.$router.push('/login');
     }
-  },
-  async created() {
-    console.log(this.$store.state.auth.user);
-    UserService.getUserBoard().then(
-      (response) => {
-        console.log(response);
-        this.content = response.data;
-      },
-      (error) => {
-        console.log(error);
-        this.content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
-    );
   },
   methods: {
     logout() {
       this.$store.dispatch("auth/logout")
       this.$router.push("/");
+    },
+    schedule(){
+      this.$router.push("/schedule");
     },
     editUesr() {
       if (this.edit === false) {
@@ -118,17 +113,17 @@ export default {
           this.username = this.$store.state.auth.user.username
         }
         this.$store.dispatch("auth/update", {
-          token: this.$store.state.auth.user.token,
-          id: this.$store.state.auth.user.id,
-          roles: this.$store.state.auth.user.roles,
+          // token: this.$store.state.auth.user.token,
+          // id: this.$store.state.auth.user.id,
+          // roles: this.$store.state.auth.user.roles,
           firstname: this.firstname,
           lastname: this.lastname,
           username: this.username,
         }).then(
-          (response) => {
-            this.token = response.token;
-            console.log(response)
-            this.$router.push("/profile");
+          () => {
+            // this.token = response.token;
+            this.firstname = '';
+            this.lastname = '';
           },
           (error) => {
             console.log(error)

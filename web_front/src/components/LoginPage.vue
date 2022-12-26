@@ -28,9 +28,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title" id="userFormLabelSignIn">Вход </h2>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
 
             <div class="modal-body">
@@ -63,16 +60,6 @@ export default {
             errors: [],
             error: '',
         };
-    },
-    computed: {
-        loggedIn() {
-            return this.$store.state.auth.status.loggedIn;
-        },
-    },
-    created() {
-        if (this.loggedIn) {
-            this.$router.push("/profile");
-        }
     },
     methods: {
         handleLogin() {

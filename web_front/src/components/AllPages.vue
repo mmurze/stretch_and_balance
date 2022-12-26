@@ -1,13 +1,14 @@
 <template>
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <nav class="navbar navbar-expand-md fixed-top">
         <div class="container">
 
             <a class="navbar-brand smoothScroll" href="#home">Stretch and Balance</a>
+
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
                 <i class="fa fa-bars  mr-lg-auto mb-2" aria-hidden="true"></i>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
+
                 <ul class="navbar-nav ml-lg-auto">
                     <li class="nav-item">
                         <a href="#about" class="nav-link smoothScroll">О нас</a>
@@ -25,18 +26,28 @@
                         <a href="#contact" class="nav-link smoothScroll">Контакты</a>
                     </li>
 
-                    <li class="nav-item">
-                        <router-link class="nav-link " to="/profile" href="#">
+                    <li v-if="!currentUser" class="nav-item">
+                        <router-link class="nav-link " to="/register" href="#">
                             <i class="fa fa-user-circle mr-lg-auto mb-2 "></i>
                         </router-link>
                     </li>
 
-                    <li class="nav-item">
+                    <li v-if="currentUser" class="nav-item">
+                        <router-link class="nav-link " to="/profile" href="#">
+                            <i class="fa fa-user-circle mr-lg-auto mb-2 "></i>
+                        </router-link>
+                    </li>
+                    <li v-if="currentUser" class="nav-item" @click.prevent="logout">
                         <router-link class="nav-link" to="/" href="#"> Выйти </router-link>
                     </li>
+                    <!-- 
+                    <li v-if="showAdminBoard" class="nav-item">
+                        <router-link class="nav-link " to="/register" href="#">
+                            <i class="fa fa-user-circle mr-lg-auto mb-2 "></i>
+                        </router-link>
+                    </li> -->
                 </ul>
             </div>
-
         </div>
     </nav>
 
@@ -154,7 +165,7 @@
                         <img src="../../public/front/images/class/yoga.jpg" class="img-fluid" alt="Class">
                         <div class="class-info">
                             <h3 class="mb-1">Йога</h3>
-                            <p class="mt-3">Тут описание йога(скорее всего модальное окно)</p>
+                            <p class="mt-3">Тут описание йоги</p>
                         </div>
                     </div>
                 </div>
@@ -188,14 +199,16 @@
 
     <!-- SCHEDULE -->
     <section class="schedule section" id="schedule">
-        <div class="container">
+        <FullCalendar :options='calendarOptions'>
+        </FullCalendar>
+        <!-- <div class="container">
             <div class="row">
 
                 <div class="col-lg-12 col-12 text-center">
                     <h2 class="text-white">Расписание занятий</h2>
                 </div>
 
-                <div class="col-lg-12 py-8 col-12">
+                <div class="col-lg-12 py-5 col-md-12 col-12">
                     <table class="table table-bordered table-responsive schedule-table">
 
                         <thead class="thead-light">
@@ -258,7 +271,7 @@
                 </div>
 
             </div>
-        </div>
+        </div> -->
     </section>
 
 
@@ -297,8 +310,64 @@
 </template>
 
 <script>
+import FullCalendar from '@fullcalendar/vue3'
+import timeGridPlugin from '@fullcalendar/timegrid'
 export default {
     // eslint-disable-next-line vue/multi-word-component-names
-    name: "AllPagesUsers"
+    name: "AllPagesGuests",
+    components: {
+        FullCalendar // make the <FullCalendar> tag available
+    },
+    data: function () {
+        return {
+            calendarOptions: {
+                plugins: [
+                    timeGridPlugin
+                ],
+                initialView: 'timeGridWeek',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'timeGridWeek'
+                },
+                slotMinTime: '08:00:00',
+                slotMaxTime: '22:00:00',
+                height: 500,
+                locale: 'ru',
+                weekday: 'long',
+                firstDay: 1,
+                buttonText: {
+                    today: 'сегодня',
+                    week: 'неделя'
+                },
+                allDaySlot: false,
+                events: [
+                    {
+                        title: 'Йога',
+                        daysOfWeek: ['2', '4'],
+                        startTime: '10:00:00',
+                        endTime: '12:00:00'
+                    },
+                    {
+                        title: 'Растяжка',
+                        daysOfWeek: ['1', '5'],
+                        startTime: '15:00:00',
+                        endTime: '16:00:00'
+                    },
+                ]
+            }
+        }
+    },
+    computed: {
+        currentUser() {
+            return this.$store.state.auth.user;
+        }
+    },
+    methods: {
+        async logout() {
+            await this.$store.dispatch("auth/logout");
+            this.$router.push("/login");
+        },
+    },
 }
 </script>

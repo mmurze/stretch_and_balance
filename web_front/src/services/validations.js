@@ -6,14 +6,10 @@ export default class Validations {
         return false;
     }
 
-    static minLength(password, minLength, lenght) {
-        if (lenght < minLength) {
+    static minLength(password) {
+        if(!(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,30}$/.test(password,))) {
             return false;
         }
-        if(!(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,30}$/.test(password,))) {
-            return true;
-        }
-        
         return true;
     }
 

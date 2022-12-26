@@ -14,7 +14,7 @@ export default class SignupValidations {
         if (!Validations.checkEmail(this.username)) {
             errors['username'] = 'Неверно введена почта';
         }
-        if (!Validations.minLength(this.password, 8, this.length)) {
+        if (!Validations.minLength(this.password)) {
             errors['password'] = 'Неверно введен пароль';
         }
         if (!Validations.cheackPasswords(this.password, this.password_repeat)) {

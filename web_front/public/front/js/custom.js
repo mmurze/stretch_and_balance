@@ -5,13 +5,6 @@ $(function () {
         $(".navbar-collapse").collapse('hide');
     });
 
-    // AOS ANIMATION
-    AOS.init({
-        disable: 'mobile',
-        duration: 800,
-        anchorPlacement: 'center-bottom'
-    });
-
     // SMOOTHSCROLL NAVBAR
     $(function () {
         $('.navbar a, .hero-text a, .container a').on('click', function (event) {

@@ -48,8 +48,8 @@
 
                         <div v-if="error" class="error"> {{ error }} </div>
 
-                        <button type="submit" class="form-controll" :disabled="successful" id="buttonSignIn">
-                            reg
+                        <button type="submit" class="form-controll" id="buttonSignIn">
+                            Зарегестрироваться
                         </button>
 
                         <div v-if="success" class="success"> {{ success }} </div>

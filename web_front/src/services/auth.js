@@ -29,32 +29,19 @@ class AuthService {
     async update(user) {
         const response = await axios
             .post(API_URL + 'update', {
-                token: user.token,
-                roles: user.roles,
-                lastname: user.lastname,
-                firstname: user.firstname,
                 username: user.username,
-                id: user.id,
-            });
-        console.log(response.data)
-        if (response.data.token) {
-            console.log(response.data)
-            localStorage.setItem('user', JSON.stringify(response.data));
-        }
-        return response.data;
-    }
-    async forgot(user) {
-        const response = await axios
-            .post(API_URL + 'forgot', {
                 lastname: user.lastname,
                 firstname: user.firstname,
-                username: user.username
             });
-        if (response.data.token) {
-            localStorage.setItem('user', JSON.stringify(response.data));
+        if (response.data) {
+            const userstr = localStorage.getItem('user');
+            const parsedObject = JSON.parse(userstr);
+            parsedObject.lastName = response.data.lastName;
+            parsedObject.firstName = response.data.firstName;
+            localStorage.setItem("user", JSON.stringify(parsedObject));
+            location.reload();
         }
         return response.data;
     }
-
 }
 export default new AuthService();
